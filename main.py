@@ -63,6 +63,7 @@ def create_pdf(resized_image, strip_width_cm, num_pages, output_folder):
     return pdf_path
 
 
+
 @app.post("/generate-pdf/")
 async def generate_pdf(
     image: UploadFile = File(...),
@@ -94,6 +95,8 @@ async def generate_pdf(
 
         if temp_image_path:
             os.remove(temp_image_path)
+
+        logger.info(f"output_folder: {output_folder}")
 
         response = FileResponse("output.pdf")
 
