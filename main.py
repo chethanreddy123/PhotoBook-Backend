@@ -15,7 +15,7 @@ def resize_and_stretch_image(image_file, book_height_cm, num_pages, strip_width_
     new_height_px = int(book_height_cm * 37.795275591)  # Convert cm to pixels
     total_width_cm = num_pages * strip_width_cm
     new_width_px = int(total_width_cm * 37.795275591)  # Convert total width from cm to pixels
-    resized_image = image.resize((new_width_px, new_height_px), Image.ANTIALIAS)
+    resized_image = image.resize((new_width_px, new_height_px), Image.LANCZOS)
     return resized_image
 
 def create_pdf(resized_image, strip_width_cm, num_pages, output_folder):
