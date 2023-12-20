@@ -28,6 +28,7 @@ def resize_and_stretch_image(image_file, book_height_cm, num_pages, strip_width_
     resized_image = image.resize((new_width_px, new_height_px), Image.LANCZOS)
     return resized_image
 
+
 def create_pdf(resized_image, strip_width_cm, num_pages, output_folder):
     # Ensure the output folder exists
     if not os.path.exists(output_folder):
@@ -42,8 +43,10 @@ def create_pdf(resized_image, strip_width_cm, num_pages, output_folder):
 
     pdf = FPDF(orientation='P', unit='cm', format='A4')
     pdf.add_page()  # Start by adding a new page
+
+    # Initialize x and y positions for strips
     x_position = MARGIN_CM
-    y_position = MARGIN_CM
+    y_position = MARGIN_CM + 2  # Extra space for strip numbering
 
     # Iterate over each strip and add it to the PDF
     for strip in range(num_pages):
@@ -61,6 +64,11 @@ def create_pdf(resized_image, strip_width_cm, num_pages, output_folder):
         strip_path = os.path.join(output_folder, f'strip_{strip}.jpg')
         strip_image.save(strip_path)
 
+        # Add strip numbering
+        pdf.set_xy(x_position, y_position - 1.5)  # Position above the strip
+        pdf.set_font('Arial', 'B', 10)
+        pdf.cell(strip_width_cm, 1, f'Strip {strip + 1}', 0, 0, 'C')  # Centered text
+
         # Add the strip to the PDF
         pdf.image(strip_path, x=x_position, y=y_position, w=strip_width_cm)
 
@@ -68,10 +76,9 @@ def create_pdf(resized_image, strip_width_cm, num_pages, output_folder):
         x_position += strip_width_cm + MARGIN_CM
 
     # Save the PDF
-    pdf_path =  'output.pdf'
+    pdf_path = 'output.pdf'
     pdf.output(pdf_path)
     return pdf_path
-
 
 
 @app.post("/generate-pdf/")
