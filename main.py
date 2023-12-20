@@ -5,9 +5,19 @@ from fpdf import FPDF
 import shutil
 from  loguru import logger
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
+
+origins = ["*"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def resize_and_stretch_image(image_file, book_height_cm, num_pages, strip_width_cm):
     image = Image.open(image_file)
